@@ -14,48 +14,48 @@ include(GNUInstallDirs)
 include(CMakePackageConfigHelpers)
 
 set(CMAKE_INSTALL_PREFIX ${COLA_DIR})
-set(COLA_MODULE Deexcitation)
+set(COLA_MODULE_NAME Deexcitation)
 
 set(CMAKE_BUILD_RPATH_USE_LINK_PATH TRUE)
 
 set(COLA_CMAKE_CXX_CLANG_TIDY
     ""
-    CACHE STRING "Passed to CMAKE_CXX_CLANG_TIDY for ${COLA_MODULE} targets"
+    CACHE STRING "Passed to CMAKE_CXX_CLANG_TIDY for ${COLA_MODULE_NAME} targets"
 )
 
 file(GLOB SOURCES CONFIGURE_DEPENDS Deexcitation/*.cpp Deexcitation/handler/*.cpp)
 
-add_library(${COLA_MODULE} SHARED ${SOURCES})
+add_library(${COLA_MODULE_NAME} SHARED ${SOURCES})
 
-target_link_libraries(${COLA_MODULE} PUBLIC COLA ${Geant4_LIBRARIES})
-target_include_directories(${COLA_MODULE} PUBLIC ${Geant4_INCLUDE_DIR})
-target_compile_options(${COLA_MODULE} PRIVATE -Wall -Werror -Wextra -Wpedantic)
-target_compile_features(${COLA_MODULE} PRIVATE cxx_std_20)
+target_link_libraries(${COLA_MODULE_NAME} PUBLIC COLA ${Geant4_LIBRARIES})
+target_include_directories(${COLA_MODULE_NAME} PUBLIC ${Geant4_INCLUDE_DIR})
+target_compile_options(${COLA_MODULE_NAME} PRIVATE -Wall -Werror -Wextra -Wpedantic)
+target_compile_features(${COLA_MODULE_NAME} PRIVATE cxx_std_20)
 
 target_include_directories(
-    ${COLA_MODULE} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
+    ${COLA_MODULE_NAME} PUBLIC $<BUILD_INTERFACE:${CMAKE_CURRENT_SOURCE_DIR}>
                           $<INSTALL_INTERFACE:${CMAKE_INSTALL_INCLUDEDIR}/Deexcitation>
 )
 
 set_target_properties(
-    ${COLA_MODULE}
+    ${COLA_MODULE_NAME}
     PROPERTIES VERSION "${PROJECT_VERSION}"
                SOVERSION "${PROJECT_VERSION_MAJOR}"
                CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
 )
 
 install(
-    TARGETS ${COLA_MODULE}
-    EXPORT ${COLA_MODULE}Export
-    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${COLA_MODULE}
-    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/${COLA_MODULE}
+    TARGETS ${COLA_MODULE_NAME}
+    EXPORT ${COLA_MODULE_NAME}Export
+    LIBRARY DESTINATION ${CMAKE_INSTALL_LIBDIR}/${COLA_MODULE_NAME}
+    ARCHIVE DESTINATION ${CMAKE_INSTALL_LIBDIR}/${COLA_MODULE_NAME}
     RUNTIME DESTINATION ${CMAKE_INSTALL_BINDIR}
     INCLUDES
-    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${COLA_MODULE}
+    DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}/${COLA_MODULE_NAME}
 )
 
 install(
-    DIRECTORY ${COLA_MODULE}
+    DIRECTORY ${COLA_MODULE_NAME}
     DESTINATION ${CMAKE_INSTALL_INCLUDEDIR}
     FILES_MATCHING
     PATTERN "*.h"
@@ -63,25 +63,25 @@ install(
 
 configure_package_config_file(
     ${CMAKE_CURRENT_SOURCE_DIR}/Config.cmake.in
-    ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE}Config.cmake
-    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${COLA_MODULE}
+    ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE_NAME}Config.cmake
+    INSTALL_DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${COLA_MODULE_NAME}
 )
 
 write_basic_package_version_file(
-    ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE}ConfigVersion.cmake
+    ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE_NAME}ConfigVersion.cmake
     VERSION ${Deexcitation_VERSION}
     COMPATIBILITY AnyNewerVersion
 )
 
-install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE}Config.cmake
-              ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE}ConfigVersion.cmake
-        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${COLA_MODULE}
+install(FILES ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE_NAME}Config.cmake
+              ${CMAKE_CURRENT_BINARY_DIR}/${COLA_MODULE_NAME}ConfigVersion.cmake
+        DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${COLA_MODULE_NAME}
 )
 
 install(
-    EXPORT ${COLA_MODULE}Export
-    FILE ${COLA_MODULE}Export.cmake
-    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${COLA_MODULE}
+    EXPORT ${COLA_MODULE_NAME}Export
+    FILE ${COLA_MODULE_NAME}Export.cmake
+    DESTINATION ${CMAKE_INSTALL_LIBDIR}/cmake/${COLA_MODULE_NAME}
 )
 
 enable_testing()
