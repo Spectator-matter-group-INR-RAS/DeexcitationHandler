@@ -2,7 +2,7 @@
 ---
 WarningsAsErrors: '*'
 HeaderFilterRegex: '.*'
-ExcludeHeaderFilterRegex: '^(.*/)?tinyxml2/.*'
+ExcludeHeaderFilterRegex: '^(.*/)?(tinyxml2|Geant4|CLHEP)/.*'
 FormatStyle: 'file'
 UseColor: true
 SystemHeaders: false
@@ -101,11 +101,11 @@ CheckOptions:
   - key: readability-identifier-length.MinimumVariableNameLength
     value: 2
   - key: readability-identifier-length.IgnoredVariableNames
-    value: '^(i|j|k|x|y|z|n|a|b)$'
+    value: '^(i|j|k|x|y|z|n|a|b|A|Z)$'
   - key: readability-identifier-length.MinimumParameterNameLength
     value: 2
   - key: readability-identifier-length.IgnoredParameterNames
-    value: '^(i|j|k|x|y|z|n|a|b)$'
+    value: '^(i|j|k|x|y|z|n|a|b|A|Z)$'
   - key: readability-identifier-length.MinimumLoopCounterNameLength
     value: 2
   - key: readability-identifier-length.IgnoredLoopCounterNames

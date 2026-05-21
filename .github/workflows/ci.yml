@@ -24,8 +24,8 @@ jobs:
       - name: Checkout COLA
         uses: actions/checkout@v6
         with:
-          repository: Spectator-matter-group-INR-RAS/COLA
-          ref: main
+          repository: ZakayZ/COLA
+          ref: tidy
           path: COLA
 
       - name: Checkout Geant4
