@@ -3,6 +3,10 @@
 
 #include <COLA.hh>
 
+#include <memory>
+#include <string>
+#include <unordered_map>
+
 namespace cola {
 
   class G4HandlerFactory final : public VConverterFactory {

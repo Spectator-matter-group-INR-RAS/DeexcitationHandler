@@ -16,11 +16,6 @@ include(CMakePackageConfigHelpers)
 set(CMAKE_INSTALL_PREFIX ${COLA_DIR})
 set(COLA_MODULE_NAME Deexcitation)
 
-set(COLA_CMAKE_CXX_CLANG_TIDY
-    ""
-    CACHE STRING "Passed to CMAKE_CXX_CLANG_TIDY for ${COLA_MODULE_NAME} targets"
-)
-
 file(GLOB SOURCES CONFIGURE_DEPENDS Deexcitation/*.cpp Deexcitation/handler/*.cpp)
 
 add_library(${COLA_MODULE_NAME} SHARED ${SOURCES})
@@ -39,7 +34,6 @@ set_target_properties(
     ${COLA_MODULE_NAME}
     PROPERTIES VERSION "${PROJECT_VERSION}"
                SOVERSION "${PROJECT_VERSION_MAJOR}"
-               CXX_CLANG_TIDY "${COLA_CMAKE_CXX_CLANG_TIDY}"
                BUILD_WITH_INSTALL_RPATH TRUE
                INSTALL_RPATH_USE_LINK_PATH TRUE
 )
@@ -91,5 +85,5 @@ if (NOT DEFINED ENV{COLA_FETCH_MODE})
         add_subdirectory(tests)
     endif ()
 
-    setup_cola_quality_tools(EXCLUDE_PATTERNS "(^|/)COLA/" "(^|/)geant4/")
+    setup_cola_quality_tools(EXCLUDE_PATTERNS "(^|/)geant4/" "(^|/)tests/")
 endif ()

@@ -3,13 +3,19 @@
 #include "Deexcitation/G4HandlerConverter.h"
 #include "Deexcitation/handler/ExcitationHandler.h"
 
+#include <CLHEP/Units/SystemOfUnits.h>
+#include <COLA.hh>
 #include <G4FermiDataTypes.hh>
+#include <G4Fragment.hh>
+#include <G4Types.hh>
 #include <Randomize.hh>
 
+#include <cmath>
 #include <memory>
 #include <optional>
 #include <string>
 #include <unordered_map>
+#include <utility>
 
 namespace {
 

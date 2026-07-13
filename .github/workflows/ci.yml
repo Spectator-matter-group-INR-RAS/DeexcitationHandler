@@ -14,18 +14,19 @@ jobs:
     timeout-minutes: 60
     env:
       CXX: g++
-      G4_VERSION: v11.4.0
+      G4_VERSION: v11.4.2
       G4_INSTALL: /home/runner/.geant4
 
     steps:
       - name: Checkout DeexcitationHandler
         uses: actions/checkout@v6
+        with:
+          path: Deexcitation
 
       - name: Checkout COLA
         uses: actions/checkout@v6
         with:
-          repository: ZakayZ/COLA
-          ref: tidy
+          repository: Spectator-matter-group-INR-RAS/COLA
           path: COLA
 
       - name: Checkout Geant4
@@ -48,7 +49,7 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y build-essential cmake \
-            libexpat1-dev zlib1g-dev libgtest-dev g++ clang-format-19 clang-tidy
+            libexpat1-dev zlib1g-dev libgtest-dev g++ clang-format-20 clang-tidy-20
           pip install cmake-format
 
       - name: Build and install Geant4
@@ -77,19 +78,17 @@ jobs:
           sudo cmake --install build/release
 
       - name: Test Deexcitation
+        working-directory: Deexcitation
         run: |
           source "${G4_INSTALL}/bin/geant4.sh"
           export CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
           cmake --workflow release-test
 
-      - name: Clang-tidy
-        id: clang-tidy
+      - name: Check formatting
+        working-directory: Deexcitation
+        id: check-format
+        if: always()
         run: |
           source "${G4_INSTALL}/bin/geant4.sh"
           export CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
-          cmake --workflow test
-
-      - name: Check formatting
-        id: check-format
-        if: always()
-        run: cmake --workflow check-format
+          cmake --workflow format-check

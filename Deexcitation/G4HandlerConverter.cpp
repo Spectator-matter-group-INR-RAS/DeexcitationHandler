@@ -3,6 +3,15 @@
 
 #include "Deexcitation/handler/ExcitationHandler.h"
 
+#include <EventData.hh>
+#include <G4Fragment.hh>
+#include <G4ReactionProduct.hh>
+#include <G4Types.hh>
+
+#include <cstdint>
+#include <memory>
+#include <utility>
+
 namespace {
 
   G4Fragment ColaToG4(const cola::Particle& particle) {
