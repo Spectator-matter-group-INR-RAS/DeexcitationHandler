@@ -91,4 +91,5 @@ jobs:
         run: |
           source "${G4_INSTALL}/bin/geant4.sh"
           export CMAKE_BUILD_PARALLEL_LEVEL="$(nproc)"
+          export PATH="/usr/lib/llvm-20/bin:$PATH"
           cmake --workflow format-check

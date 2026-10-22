@@ -6,6 +6,7 @@
 
 #include <CLHEP/Units/PhysicalConstants.h>
 #include <CLHEP/Units/SystemOfUnits.h>
+#include <CLHEP/Vector/LorentzVector.h>
 #include <G4Alpha.hh>
 #include <G4ApplicationState.hh>
 #include <G4BaryonConstructor.hh>
@@ -305,13 +306,14 @@ void ExcitationHandler::NeutronDecay::BreakFragment(G4FragmentVector& results, c
   const auto particles_momentum = phase_space_decay_.CalculateDecay(momentum, masses);
   if (particles_momentum.empty()) {
     std::stringstream ss;
-    ss << "NeutronDecay is unable to break particle with "
-       << "A = " << fragment.GetA_asInt() << ", Z = " << fragment.GetZ_asInt() << ", P = " << momentum;
+    ss << "NeutronDecay is unable to break particle with A = " << fragment.GetA_asInt()
+       << ", Z = " << fragment.GetZ_asInt() << ", P = " << momentum;
     throw std::runtime_error(ss.str());
   }
 
+  const auto boost = momentum.boostVector();
   for (const auto& particle_momentum : particles_momentum) {
-    results.emplace_back(new G4Fragment(1, 0, particle_momentum));
+    results.emplace_back(new G4Fragment(1, 0, CLHEP::boostOf(particle_momentum, boost)));
   }
 }
 
@@ -437,12 +439,16 @@ void ExcitationHandler::ApplyEvaporation(std::unique_ptr<G4Fragment>&& fragment,
   G4FragmentVector fragments;
   evaporation_model_->BreakFragment(&fragments, fragment.get());
 
-  if (fragments.size() <= 1) {
-    ClearSingularResults(fragments, fragment.get());
+  if (!fragments.empty() && fragments.back() == fragment.get()) {
+    fragments.pop_back();
+  }
+
+  if (fragments.empty()) {
     results.emplace_back(fragment.release());
     return;
   }
 
+  fragments.push_back(fragment.release());
   GroupFragments(std::move(fragments), results, next_stage);
 }
 
