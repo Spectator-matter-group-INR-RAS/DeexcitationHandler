@@ -2,6 +2,7 @@
 #define DEEXCITATION_G4HANDLERCONVERTER_H_
 
 #include <COLA.hh>
+#include <EventData.hh>
 
 #include <memory>
 

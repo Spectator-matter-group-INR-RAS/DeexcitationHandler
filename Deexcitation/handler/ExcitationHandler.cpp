@@ -5,13 +5,19 @@
 #include "ExcitationHandler.h"
 
 #include <CLHEP/Units/PhysicalConstants.h>
+#include <CLHEP/Units/SystemOfUnits.h>
 #include <G4Alpha.hh>
+#include <G4ApplicationState.hh>
 #include <G4BaryonConstructor.hh>
 #include <G4BosonConstructor.hh>
 #include <G4Deuteron.hh>
 #include <G4Electron.hh>
 #include <G4Evaporation.hh>
+#include <G4Exception.hh>
+#include <G4ExceptionSeverity.hh>
 #include <G4FermiBreakUpAN.hh>
+#include <G4FermiDataTypes.hh>
+#include <G4Fragment.hh>
 #include <G4Gamma.hh>
 #include <G4GenericIon.hh>
 #include <G4He3.hh>
@@ -22,6 +28,7 @@
 #include <G4MesonConstructor.hh>
 #include <G4Neutron.hh>
 #include <G4NistManager.hh>
+#include <G4ParticleDefinition.hh>
 #include <G4ParticleTable.hh>
 #include <G4PhotonEvaporation.hh>
 #include <G4PionMinus.hh>
@@ -29,11 +36,23 @@
 #include <G4PionZero.hh>
 #include <G4ProcessManager.hh>
 #include <G4Proton.hh>
+#include <G4ReactionProduct.hh>
 #include <G4StatMF.hh>
 #include <G4StateManager.hh>
 #include <G4Triton.hh>
+#include <G4Types.hh>
+#include <G4VEvaporationChannel.hh>
+#include <G4VMultiFragmentation.hh>
+#include <Randomize.hh>
 
+#include <cmath>
+#include <cstddef>
+#include <memory>
+#include <sstream>
+#include <stdexcept>
 #include <string>
+#include <utility>
+#include <vector>
 
 namespace {
   constexpr size_t kEvaporationIterationThreshold = 1e3;

@@ -1,12 +1,10 @@
 #ifndef DEEXCITATION_HANDLER_EXCITATIONHANDLER_H_
 #define DEEXCITATION_HANDLER_EXCITATIONHANDLER_H_
 
-#include <G4DeexPrecoParameters.hh>
 #include <G4FermiPhaseDecay.hh>
 #include <G4Fragment.hh>
-#include <G4IonTable.hh>
 #include <G4NistManager.hh>
-#include <G4ReactionProductVector.hh>
+#include <G4ReactionProduct.hh>
 #include <G4VEvaporation.hh>
 #include <G4VFermiBreakUp.hh>
 #include <G4VMultiFragmentation.hh>
@@ -14,6 +12,7 @@
 #include <functional>
 #include <memory>
 #include <queue>
+#include <utility>
 #include <vector>
 
 class ExcitationHandler {
