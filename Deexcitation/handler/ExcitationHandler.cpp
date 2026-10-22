@@ -33,6 +33,7 @@
 #include <G4StateManager.hh>
 #include <G4Triton.hh>
 
+#include <algorithm>
 #include <string>
 
 namespace {
@@ -291,8 +292,9 @@ void ExcitationHandler::NeutronDecay::BreakFragment(G4FragmentVector& results, c
     throw std::runtime_error(ss.str());
   }
 
+  const auto boost = momentum.boostVector();
   for (const auto& particle_momentum : particles_momentum) {
-    results.emplace_back(new G4Fragment(1, 0, particle_momentum));
+    results.emplace_back(new G4Fragment(1, 0, CLHEP::boostOf(particle_momentum, boost)));
   }
 }
 
@@ -418,12 +420,16 @@ void ExcitationHandler::ApplyEvaporation(std::unique_ptr<G4Fragment>&& fragment,
   G4FragmentVector fragments;
   evaporation_model_->BreakFragment(&fragments, fragment.get());
 
-  if (fragments.size() <= 1) {
-    ClearSingularResults(fragments, fragment.get());
+  if (!fragments.empty() && fragments.back() == fragment.get()) {
+    fragments.pop_back();
+  }
+
+  if (fragments.empty()) {
     results.emplace_back(fragment.release());
     return;
   }
 
+  fragments.push_back(fragment.release());
   GroupFragments(std::move(fragments), results, next_stage);
 }
 
