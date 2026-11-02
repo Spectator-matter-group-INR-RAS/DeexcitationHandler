@@ -15,7 +15,7 @@
 
 namespace {
 
-  G4Fragment ColaToG4(const cola::Particle& particle) {
+  G4Fragment MakeRestFrameFragment(const cola::Particle& particle) {
     const auto [atomic_mass, charge] = particle.GetAZ();
 
     const G4LorentzVector momentum(particle.momentum.x, particle.momentum.y, particle.momentum.z, particle.momentum.e);
@@ -49,13 +49,9 @@ namespace cola {
     EventParticles results;
     for (const auto& particle : data->particles) {
       const auto particle_class = particle.p_class;
-      if (particle_class == ParticleClass::kSpectatorA || particle_class == ParticleClass::kSpectatorB) {
-        if (particle.GetAZ().first == 1) {
-          results.emplace_back(particle);
-          results.back().position = {};
-          continue;
-        }
-        auto model_result = model_->BreakItUp(ColaToG4(particle));
+      if ((particle_class == ParticleClass::kSpectatorA || particle_class == ParticleClass::kSpectatorB) &&
+          particle.pdg_code != 2212 && particle.pdg_code != 2112) {
+        auto model_result = model_->BreakItUp(MakeRestFrameFragment(particle));
         const G4LorentzVector initial_momentum(particle.momentum.x, particle.momentum.y, particle.momentum.z,
                                                particle.momentum.e);
         const auto boost = initial_momentum.boostVector();
