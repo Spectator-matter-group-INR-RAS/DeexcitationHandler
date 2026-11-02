@@ -5,6 +5,7 @@
 
 #include <EventData.hh>
 #include <G4Fragment.hh>
+#include <G4LorentzVector.hh>
 #include <G4ReactionProduct.hh>
 #include <G4Types.hh>
 
@@ -14,12 +15,12 @@
 
 namespace {
 
-  G4Fragment ColaToG4(const cola::Particle& particle) {
+  G4Fragment MakeRestFrameFragment(const cola::Particle& particle) {
     const auto [atomic_mass, charge] = particle.GetAZ();
 
-    return G4Fragment(
-        static_cast<G4int>(atomic_mass), static_cast<G4int>(charge),
-        G4LorentzVector(particle.momentum.x, particle.momentum.y, particle.momentum.z, particle.momentum.e));
+    const G4LorentzVector momentum(particle.momentum.x, particle.momentum.y, particle.momentum.z, particle.momentum.e);
+    return G4Fragment(static_cast<G4int>(atomic_mass), static_cast<G4int>(charge),
+                      G4LorentzVector(0., 0., 0., momentum.mag()));
   }
 
   cola::Particle G4ToCola(const G4ReactionProduct& fragment) {
@@ -48,8 +49,18 @@ namespace cola {
     EventParticles results;
     for (const auto& particle : data->particles) {
       const auto particle_class = particle.p_class;
-      if (particle_class == ParticleClass::kSpectatorA || particle_class == ParticleClass::kSpectatorB) {
-        const auto model_result = model_->BreakItUp(ColaToG4(particle));
+      if ((particle_class == ParticleClass::kSpectatorA || particle_class == ParticleClass::kSpectatorB) &&
+          particle.pdg_code != 2212 && particle.pdg_code != 2112) {
+        auto model_result = model_->BreakItUp(MakeRestFrameFragment(particle));
+        const G4LorentzVector initial_momentum(particle.momentum.x, particle.momentum.y, particle.momentum.z,
+                                               particle.momentum.e);
+        const auto boost = initial_momentum.boostVector();
+        for (auto& product : model_result) {
+          G4LorentzVector momentum(product.GetMomentum(), product.GetTotalEnergy());
+          momentum.boost(boost);
+          product.SetMomentum(momentum.vect());
+          product.SetTotalEnergy(momentum.e());
+        }
 
         for (const auto& fragment : model_result) {
           results.emplace_back(G4ToCola(fragment));
